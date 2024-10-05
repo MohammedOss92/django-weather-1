@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="ar">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>توقعات الطقس</title>
+</head>
+
+<body>
+    <h1>توقعات الطقس في {{ city }}</h1>
+
+    {% if exception_occurred %}
+    <p style="color:red;">حدث خطأ: {{ messages.get_messages|join:", " }}</p>
+    {% endif %}
+
+    <form method="POST">
+        {% csrf_token %}
+        <input type="text" name="city" placeholder="أدخل اسم المدينة" required>
+        <button type="submit">احصل على الطقس</button>
+    </form>
+
+    <h2>توقعات الطقس لمدة 24 ساعة:</h2>
+    <ul>
+        {% for forecast in forecast_data %}
+        <li>{{ forecast.time }}: {{ forecast.temp }} °C - {{ forecast.description }}</li>
+        {% endfor %}
+    </ul>
+
+    <p>تاريخ اليوم: {{ day }}</p>
+</body>
+
+</html>

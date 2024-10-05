@@ -105,6 +105,10 @@ def home(request):
     # استعلام عن بيانات الطقس
     url = f'https://api.openweathermap.org/data/2.5/weather?q={city}&appid=7f2a6a273a52d2ff787660d9d98844d9'
     PARAMS = {'units': 'metric'}
+# استعلام عن بيانات الطقس
+    url = f'https://api.openweathermap.org/data/2.5/weather?q={city}&appid=7f2a6a273a52d2ff787660d9d98844d9'
+    PARAMS = {'units': 'metric'}
+    #firebasefirestore
 
     API_KEY = 'AIzaSyCXQu26rHQSyLwFgx-eDOvem6dp_sR5e_4'  # تأكد من إدخال مفتاح API هنا
     SEARCH_ENGINE_ID = 'a3fca5f4e0e0e47a2'  # تأكد من إدخال معرف محرك البحث هنا
