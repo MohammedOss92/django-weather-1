@@ -1,0 +1,49 @@
+import requests
+from django.shortcuts import render
+from datetime import datetime
+from django.contrib import messages
+
+def hourly_forecast(request):
+    city = request.POST.get('city', 'Amman')  # استخدام المدينة المدخلة أو القيمة الافتراضية
+    API_KEY = 'YOUR_API_KEY'  # أدخل مفتاح API الخاص بك هنا
+    url = f'https://api.openweathermap.org/data/2.5/forecast?q={city}&appid={API_KEY}&units=metric'
+
+    try:
+        response = requests.get(url)
+        weather_data = response.json()
+
+        if weather_data.get("cod") != '200':
+            raise KeyError("Weather data not available")
+
+        # قائمة لتخزين بيانات الطقس الساعية
+        hourly_data = []
+        
+        # الحصول على التنبؤات لكل 3 ساعات
+        for item in weather_data['list']:
+            timestamp = item['dt']
+            datetime_obj = datetime.fromtimestamp(timestamp)
+            hour = datetime_obj.strftime('%H:%M')
+            temp = item['main']['temp']
+            description = item['weather'][0]['description']
+            icon = item['weather'][0]['icon']
+
+            hourly_data.append({
+                'hour': hour,
+                'temp': temp,
+                'description': description,
+                'icon': icon,
+            })
+
+        return render(request, 'weatherapp/hourly_forecast.html', {
+            'city': city,
+            'hourly_data': hourly_data,
+            'exception_occurred': False,
+        })
+
+    except KeyError:
+        messages.error(request, 'Entered data is not available to API')
+        return render(request, 'weatherapp/hourly_forecast.html', {
+            'city': city,
+            'hourly_data': [],
+            'exception_occurred': True,
+        })
